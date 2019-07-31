@@ -1,0 +1,12 @@
+git checkout gh-pages;
+
+git merge --no-ff --no-edit master;
+
+npm run build;
+
+git add build.js;
+
+git commit -m "build latest master";
+
+git show HEAD;
+
