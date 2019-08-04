@@ -18,7 +18,7 @@ export async function setupAudio(audioType) {
 export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   var dataArray = new Uint8Array(analyserNode.frequencyBinCount);
 
-  var { blinkersLarge, blinkersEtc, stars } = GameState.objects;
+  var { blinkersLarge, blinkersEtc, stars, env } = GameState.objects;
 
   analyserNode.getByteFrequencyData(dataArray);
 
@@ -36,7 +36,10 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
     blinkersLarge.forEach((blinker, index) => {
       const rand = Math.random();
       if (rand > 0.85 && rand <= 0.95) {
-        TweenLite.to(blinker.sprite, 0.2, { alpha: avg });
+        TweenLite.to(blinker.sprite, 0.2, { alpha: Math.min(avg, 0.85) });
+        TweenLite.to(blinker.sprite, 0.2, {
+          rotation: blinker.sprite.rotation + Math.min(avg, 0.85),
+        });
       } else if (rand >= 0.96) {
         const storedSize = {
           x: blinker.sprite.scale.x,
@@ -63,9 +66,11 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
     blinkersEtc.forEach((blinker, index) => {
       const rand = Math.random();
       if (rand > 0.9) {
-        TweenLite.to(blinker.sprite, 0.2, { alpha: avg });
+        TweenLite.to(blinker.sprite, 0.2, { alpha: Math.min(avg, 0.7) });
       }
     });
+
+    //const divisibleNum = Math.floor(document.querySelector('audio').currentTime);
   }
 
   // this function updates the background shader according to the audio

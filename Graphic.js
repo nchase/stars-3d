@@ -4,6 +4,7 @@ import { RGBSplitFilter, PixelateFilter } from 'pixi-filters';
 import { TweenLite } from 'gsap';
 
 import { updateGameObject } from './Game';
+import { GameState } from './Game';
 
 let cameraZ = 0;
 const fov = 20;
@@ -37,6 +38,8 @@ export class Graphic extends React.Component {
 
     this.bindAudioEvents();
 
+    updateGameObject({ env: { speed: 0.05 } });
+
     // put it on spin cycle and assign to something local in case we ever need to use it:
     this.app.ticker.add(this.animate);
   }
@@ -61,8 +64,11 @@ export class Graphic extends React.Component {
   animate = delta => {
     this.renderer.render(this.stage);
 
-    speed += (warpSpeed - speed) / 20;
+    var { env } = GameState.objects;
+
+    speed += (warpSpeed - speed + env.speed) / 20;
     cameraZ += delta * 10 * (speed + baseSpeed);
+
     for (let i = 0; i < this.stars.length; i++) {
       const star = this.stars[i];
       if (star.z < cameraZ) {
