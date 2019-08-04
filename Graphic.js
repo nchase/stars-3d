@@ -21,7 +21,7 @@ export class Graphic extends React.Component {
 
     this.refs.graphic && this.refs.graphic.appendChild(this.renderer.view);
 
-    this.stage = new PIXI.Container();
+    this.stage = this.app.stage;
 
     this.background = this.createBackground();
 
@@ -89,7 +89,6 @@ export class Graphic extends React.Component {
       this.stars.push(star);
 
       if (star.alpha >= 0.75) {
-        console.log(star);
         this.blinkersLarge.push(star);
       }
       if (i % 12 === 0 && star.alpha < 0.75) {

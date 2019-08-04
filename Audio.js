@@ -29,7 +29,7 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   var avg = average(analyserNode, dataArray, minHz, maxHz);
 
   if (avg > 0.075) {
-    logger(avg);
+    //logger(avg);
   }
 
   if (document.querySelector('audio').paused === false) {
