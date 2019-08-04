@@ -70,10 +70,10 @@ export class Graphic extends React.Component {
 
     window.stars = this.stars;
 
-    for (let i = 0; i < window.innerWidth / 2; i++) {
+    for (let i = 0; i < window.innerWidth / 2.5; i++) {
       let star;
       // create a new Sprite
-      if (i % 10 === 0) {
+      if (i % 20 === 0) {
         star = PIXI.Sprite.from('./stars_particle-large.png');
       } else {
         star = PIXI.Sprite.from('./stars_particle.png');
@@ -87,11 +87,11 @@ export class Graphic extends React.Component {
       star.y = Math.random() * window.innerHeight;
 
       star.offset = Math.random() * 100;
-      star.alpha = Math.random();
+      star.alpha = Math.min(Math.random(), 0.75);
 
       this.stars.push(star);
 
-      if (i % 10 === 0) {
+      if (i % 20 === 0) {
         this.blinkersLarge.push(star);
       }
       if (i % 12 === 0) {

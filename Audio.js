@@ -1,4 +1,5 @@
 import average from 'analyser-frequency-average';
+import { TweenLite } from 'gsap';
 
 import { logger } from './util';
 
@@ -17,7 +18,7 @@ export async function setupAudio(audioType) {
 export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   var dataArray = new Uint8Array(analyserNode.frequencyBinCount);
 
-  var { background, blinkersLarge, blinkersEtc } = GameState.objects;
+  var {  blinkersLarge, blinkersEtc } = GameState.objects;
 
   analyserNode.getByteFrequencyData(dataArray);
 
@@ -35,13 +36,13 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
     blinkersLarge.forEach((blinker, index) => {
       const rand = Math.random();
       if (rand > 0.99) {
-        blinker.alpha = avg;
+        TweenLite.to(blinker, 0.2, { alpha: avg });
       }
     });
     blinkersEtc.forEach((blinker, index) => {
       const rand = Math.random();
       if (rand > 0.9) {
-        blinker.alpha = avg;
+        TweenLite.to(blinker, 0.2, { alpha: avg });
       }
     });
   }
