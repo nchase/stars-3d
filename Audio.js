@@ -17,7 +17,7 @@ export async function setupAudio(audioType) {
 export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   var dataArray = new Uint8Array(analyserNode.frequencyBinCount);
 
-  var { background } = GameState.objects;
+  var { background, blinkersLarge, blinkersEtc } = GameState.objects;
 
   analyserNode.getByteFrequencyData(dataArray);
 
@@ -32,7 +32,18 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   }
 
   if (document.querySelector('audio').paused === false) {
-    //background.alpha = Math.min(0.6, avg * 2);
+    blinkersLarge.forEach((blinker, index) => {
+      const rand = Math.random();
+      if (rand > 0.99) {
+        blinker.alpha = avg;
+      }
+    });
+    blinkersEtc.forEach((blinker, index) => {
+      const rand = Math.random();
+      if (rand > 0.9) {
+        blinker.alpha = avg;
+      }
+    });
   }
 
   // this function updates the background shader according to the audio

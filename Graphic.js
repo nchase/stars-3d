@@ -21,19 +21,6 @@ export class Graphic extends React.Component {
 
     this.stage = new PIXI.Container();
 
-    this.windowWidth = calculateWidth(window.innerWidth);
-    this.windowHeight = calculateHeight(this.windowWidth);
-    this.stage.width = this.windowWidth;
-    this.stage.height = this.windowHeight;
-
-    console.log(
-      'init wh',
-      this.stage.width,
-      this.stage.height,
-      this.windowWidth,
-      this.windowHeight,
-    );
-
     this.background = this.createBackground();
 
     this.stage.addChild(this.background);
@@ -81,16 +68,22 @@ export class Graphic extends React.Component {
   }
 
   createBackground() {
-    var graphic = new PIXI.ParticleContainer();
+    var graphic = new PIXI.Container({});
 
     this.stars = [];
+    this.blinkersLarge = [];
+    this.blinkersEtc = [];
 
     window.stars = this.stars;
 
-    console.log(this.stage);
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 200; i++) {
+      let star;
       // create a new Sprite
-      const star = PIXI.Sprite.from('./stars_particle.png');
+      if (i % 10 === 0) {
+        star = PIXI.Sprite.from('./stars_particle-large.png');
+      } else {
+        star = PIXI.Sprite.from('./stars_particle.png');
+      }
 
       // set the anchor point so the texture is centerd on the sprite
       star.anchor.set(0.5);
@@ -98,18 +91,25 @@ export class Graphic extends React.Component {
       // scatter them all
       star.x = Math.random() * this.windowWidth;
       star.y = Math.random() * this.windowHeight;
-      console.log('star x and y', star.x, star.y);
 
       star.offset = Math.random() * 100;
+      star.alpha = Math.random();
 
       this.stars.push(star);
+
+      if (i % 10 === 0) {
+        this.blinkersLarge.push(star);
+      }
+      if (i % 12 === 0) {
+        this.blinkersEtc.push(star);
+      }
 
       graphic.addChild(star);
     }
 
-    console.log(this.stars);
-
     updateGameObject({ background: graphic });
+    updateGameObject({ blinkersLarge: this.blinkersLarge });
+    updateGameObject({ blinkersEtc: this.blinkersEtc });
 
     return graphic;
   }
