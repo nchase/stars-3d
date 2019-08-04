@@ -5,6 +5,14 @@ import { TweenLite } from 'gsap';
 
 import { updateGameObject } from './Game';
 
+let cameraZ = 0;
+const fov = 20;
+const baseSpeed = 0.025;
+let speed = 10;
+let warpSpeed = 0;
+const starStretch = 5;
+const starBaseSize = 10;
+
 export class Graphic extends React.Component {
   constructor(props) {
     super(props);
@@ -29,7 +37,8 @@ export class Graphic extends React.Component {
 
     this.bindAudioEvents();
 
-    this.animate();
+    // put it on spin cycle and assign to something local in case we ever need to use it:
+    this.app.ticker.add(this.animate);
   }
 
   bindAudioEvents() {
@@ -49,24 +58,14 @@ export class Graphic extends React.Component {
 
   // main animation loop; this function, which renders the scene via Pixi,
   // calls itself whenever `requestAnimationFrame` happens.
-  animate = () => {
+
+  animate = delta => {
     this.renderer.render(this.stage);
-
-    let cameraZ = 0;
-    const fov = 20;
-    const baseSpeed = 0.025;
-    let speed = 0;
-    let warpSpeed = 0;
-    const starStretch = 5;
-    const starBaseSize = 0.05;
-
-    let delta = 1;
 
     speed += (warpSpeed - speed) / 20;
     cameraZ += delta * 10 * (speed + baseSpeed);
     for (let i = 0; i < this.stars.length; i++) {
       const star = this.stars[i];
-
       if (star.z < cameraZ) {
         randomizeStar(star);
       }
@@ -91,9 +90,6 @@ export class Graphic extends React.Component {
         (distanceScale * speed * starStretch * distanceCenter) / this.app.renderer.screen.width;
       star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
     }
-
-    // put it on spin cycle and assign to something local in case we ever need to use it:
-    this.animationLoopId = requestAnimationFrame(this.animate);
   };
 
   render() {
