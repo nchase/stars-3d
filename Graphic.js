@@ -8,7 +8,7 @@ import { updateGameObject } from './Game';
 let cameraZ = 0;
 const fov = 20;
 const baseSpeed = 0.025;
-let speed = 40;
+let speed = 10;
 let warpSpeed = 0;
 const starStretch = 5;
 const starBaseSize = 4;

@@ -38,6 +38,25 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
       if (rand > 0.85 && rand <= 0.95) {
         TweenLite.to(blinker.sprite, 0.2, { alpha: avg });
       } else if (rand >= 0.96) {
+        const storedSize = {
+          x: blinker.sprite.scale.x,
+          y: blinker.sprite.scale.y,
+        };
+
+        // TweenLite.to(blinker.sprite.scale, 0.2, {
+        //   x: blinker.sprite.scale.x * 2,
+        //   y: blinker.sprite.scale.y * 2,
+        // });
+
+        // setTimeout(() => {
+        //   console.log('reverting to ', storedSize);
+
+        //   TweenLite.to(blinker.sprite.scale, 0.2, {
+        //     x: storedSize.x,
+        //     y: storedSize.y,
+        //   });
+        // }, 600);
+
         TweenLite.to(blinker.sprite, 0.2, { alpha: 1 });
       }
     });
