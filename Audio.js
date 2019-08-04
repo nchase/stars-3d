@@ -32,7 +32,7 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   }
 
   if (document.querySelector('audio').paused === false) {
-    background.alpha = Math.min(0.6, avg * 2);
+    //background.alpha = Math.min(0.6, avg * 2);
   }
 
   // this function updates the background shader according to the audio

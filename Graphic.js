@@ -21,6 +21,19 @@ export class Graphic extends React.Component {
 
     this.stage = new PIXI.Container();
 
+    this.windowWidth = calculateWidth(window.innerWidth);
+    this.windowHeight = calculateHeight(this.windowWidth);
+    this.stage.width = this.windowWidth;
+    this.stage.height = this.windowHeight;
+
+    console.log(
+      'init wh',
+      this.stage.width,
+      this.stage.height,
+      this.windowWidth,
+      this.windowHeight,
+    );
+
     this.background = this.createBackground();
 
     this.stage.addChild(this.background);
@@ -41,7 +54,7 @@ export class Graphic extends React.Component {
 
     window.Events.on('paused', audioEl => {
       console.log('paused');
-      this.background.alpha = 0.6;
+      //this.background.alpha = 0.6;
     });
   }
 
@@ -68,11 +81,34 @@ export class Graphic extends React.Component {
   }
 
   createBackground() {
-    var graphic = new PIXI.TilingSprite.from('./stars.png');
-    graphic.width = 2000;
-    graphic.height = 2000;
+    var graphic = new PIXI.ParticleContainer();
 
-    graphic.alpha = 0.6;
+    this.stars = [];
+
+    window.stars = this.stars;
+
+    console.log(this.stage);
+    for (let i = 0; i < 100; i++) {
+      // create a new Sprite
+      const star = PIXI.Sprite.from('./stars_particle.png');
+
+      // set the anchor point so the texture is centerd on the sprite
+      star.anchor.set(0.5);
+
+      // scatter them all
+      star.x = Math.random() * this.windowWidth;
+      star.y = Math.random() * this.windowHeight;
+      console.log('star x and y', star.x, star.y);
+
+      star.offset = Math.random() * 100;
+
+      this.stars.push(star);
+
+      graphic.addChild(star);
+    }
+
+    console.log(this.stars);
+
     updateGameObject({ background: graphic });
 
     return graphic;
