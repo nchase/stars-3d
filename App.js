@@ -51,19 +51,21 @@ export default class M extends React.Component {
     el.play();
   }
 
+  handleClick = async event => {
+    event.preventDefault();
+
+    const el = document.querySelector('audio');
+    el.paused ? this.setupAndPlay(el) : el.pause();
+    await window.fetch('/foo' + +new Date());
+  };
+
   render() {
     return (
       <>
         <a
           className="f1"
           href="#"
-          onClick={async event => {
-            event.preventDefault();
-
-            const el = document.querySelector('audio');
-            el.paused ? this.setupAndPlay(el) : el.pause();
-            await window.fetch('/foo' + +new Date());
-          }}
+          onClick={this.handleClick}
           style={{
             position: 'fixed',
             top: 0,
@@ -73,16 +75,9 @@ export default class M extends React.Component {
           }}
         />
 
-        <audio ref="audioEl" className={'dn'} src={this.props.audio} loop controls />
+        <audio ref="audioEl" className={'dn'} src={this.props.audio} controls />
 
-        <Graphic
-          className="pointer"
-          onClick={async () => {
-            const el = document.querySelector('audio');
-            el.paused ? this.setupAndPlay(el) : el.pause();
-            await window.fetch('/foo' + +new Date());
-          }}
-        />
+        <Graphic className="pointer" onClick={this.handleClick} />
       </>
     );
   }
