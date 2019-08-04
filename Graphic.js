@@ -11,12 +11,13 @@ export class Graphic extends React.Component {
   }
 
   componentDidMount() {
-    this.windowWidth = calculateWidth(window.innerWidth);
-    this.windowHeight = window.innerHeight;
-
-    this.renderer = new PIXI.Renderer({
-      backgroundColor: '0x1c2733',
+    this.app = new PIXI.Application({
+      resizeTo: window,
     });
+    this.renderer = this.app.renderer;
+
+    this.renderer.backgroundColor = '0x1c2733';
+
     this.refs.graphic && this.refs.graphic.appendChild(this.renderer.view);
 
     this.stage = new PIXI.Container();
@@ -48,13 +49,6 @@ export class Graphic extends React.Component {
   // main animation loop; this function, which renders the scene via Pixi,
   // calls itself whenever `requestAnimationFrame` happens.
   animate = () => {
-    this.windowWidth = calculateWidth(window.innerWidth);
-    this.windowHeight = calculateHeight(this.windowWidth);
-    this.stage.width = this.windowWidth;
-    this.stage.height = this.windowHeight;
-
-    this.renderer.resize(window.innerWidth, window.innerHeight);
-
     this.renderer.render(this.stage);
     this.frame = requestAnimationFrame(this.animate);
   };
@@ -76,7 +70,7 @@ export class Graphic extends React.Component {
 
     window.stars = this.stars;
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < window.innerWidth / 2; i++) {
       let star;
       // create a new Sprite
       if (i % 10 === 0) {
@@ -89,8 +83,8 @@ export class Graphic extends React.Component {
       star.anchor.set(0.5);
 
       // scatter them all
-      star.x = Math.random() * this.windowWidth;
-      star.y = Math.random() * this.windowHeight;
+      star.x = Math.random() * window.innerWidth;
+      star.y = Math.random() * window.innerHeight;
 
       star.offset = Math.random() * 100;
       star.alpha = Math.random();
@@ -113,15 +107,6 @@ export class Graphic extends React.Component {
 
     return graphic;
   }
-}
-
-function calculateWidth(windowWidth) {
-  return windowWidth;
-}
-
-function calculateHeight(width) {
-  // we should do this based on AR of the original image:
-  return window.innerHeight;
 }
 
 export function updateBackgroundFilter(value, filter) {
