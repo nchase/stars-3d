@@ -14,6 +14,7 @@ export class Graphic extends React.Component {
     this.app = new PIXI.Application({
       resizeTo: window,
     });
+    PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
     this.renderer = this.app.renderer;
 
     this.renderer.backgroundColor = '0x1c2733';
@@ -70,17 +71,13 @@ export class Graphic extends React.Component {
 
     window.stars = this.stars;
 
-    for (let i = 0; i < window.innerWidth / 2.5; i++) {
-      let star;
-      // create a new Sprite
-      if (i % 20 === 0) {
-        star = PIXI.Sprite.from('./stars_particle-large.png');
-      } else {
-        star = PIXI.Sprite.from('./stars_particle.png');
-      }
+    for (let i = 0; i < window.innerWidth / 1.5; i++) {
+      const star = PIXI.Sprite.from('./stars_particle.png');
+      star.scale.set(0.5 + Math.random());
 
       // set the anchor point so the texture is centerd on the sprite
       star.anchor.set(0.5);
+      star.rotation = Math.random();
 
       // scatter them all
       star.x = Math.random() * window.innerWidth;
@@ -91,10 +88,11 @@ export class Graphic extends React.Component {
 
       this.stars.push(star);
 
-      if (i % 20 === 0) {
+      if (star.alpha >= 0.75) {
+        console.log(star);
         this.blinkersLarge.push(star);
       }
-      if (i % 12 === 0) {
+      if (i % 12 === 0 && star.alpha < 0.75) {
         this.blinkersEtc.push(star);
       }
 
