@@ -51,7 +51,49 @@ export class Graphic extends React.Component {
   // calls itself whenever `requestAnimationFrame` happens.
   animate = () => {
     this.renderer.render(this.stage);
-    this.frame = requestAnimationFrame(this.animate);
+
+    let cameraZ = 0;
+    const fov = 20;
+    const baseSpeed = 0.025;
+    let speed = 0;
+    let warpSpeed = 0;
+    const starStretch = 5;
+    const starBaseSize = 0.05;
+
+    let delta = 1;
+
+    speed += (warpSpeed - speed) / 20;
+    cameraZ += delta * 10 * (speed + baseSpeed);
+    for (let i = 0; i < this.stars.length; i++) {
+      const star = this.stars[i];
+
+      if (star.z < cameraZ) {
+        randomizeStar(star);
+      }
+
+      // Map star 3d position to 2d with really simple projection
+      const z = star.z - cameraZ;
+      star.sprite.x =
+        star.x * (fov / z) * this.app.renderer.screen.width + this.app.renderer.screen.width / 2;
+      star.sprite.y =
+        star.y * (fov / z) * this.app.renderer.screen.width + this.app.renderer.screen.height / 2;
+
+      // Calculate star scale & rotation.
+      const dxCenter = star.sprite.x - this.app.renderer.screen.width / 2;
+      const dyCenter = star.sprite.y - this.app.renderer.screen.height / 2;
+      const distanceCenter = Math.sqrt(dxCenter * dxCenter + dyCenter + dyCenter);
+      const distanceScale = Math.max(0, (2000 - z) / 2000);
+      star.sprite.scale.x = distanceScale * starBaseSize;
+      // Star is looking towards center so that y axis is towards center.
+      // Scale the star depending on how fast we are moving, what the stretchfactor is and depending on how far away it is from the center.
+      star.sprite.scale.y =
+        distanceScale * starBaseSize +
+        (distanceScale * speed * starStretch * distanceCenter) / this.app.renderer.screen.width;
+      star.sprite.rotation = Math.atan2(dyCenter, dxCenter) + Math.PI / 2;
+    }
+
+    // put it on spin cycle and assign to something local in case we ever need to use it:
+    this.animationLoopId = requestAnimationFrame(this.animate);
   };
 
   render() {
@@ -62,8 +104,40 @@ export class Graphic extends React.Component {
     );
   }
 
+  generateStars = () => {
+    for (let i = 0; i < window.innerWidth / 1.5; i++) {
+      const star = {
+        sprite: new PIXI.Sprite.from('./stars_particle.png'),
+        z: 0,
+        x: 0,
+        y: 0,
+      };
+      star.sprite.anchor.x = 0.5;
+      star.sprite.anchor.y = 0.7;
+
+      randomizeStar(star, true);
+
+      star.sprite.scale.set(0.5 + Math.random());
+
+      star.sprite.rotation = Math.random();
+
+      star.sprite.alpha = Math.min(Math.random(), 0.75);
+
+      this.stars.push(star);
+
+      if (star.sprite.alpha >= 0.75) {
+        this.blinkersLarge.push(star);
+      }
+      if (i % 12 === 0 && star.sprite.alpha < 0.75) {
+        this.blinkersEtc.push(star);
+      }
+
+      this.graphic.addChild(star.sprite);
+    }
+  };
+
   createBackground() {
-    var graphic = new PIXI.Container({});
+    var graphic = (this.graphic = new PIXI.Container({}));
 
     this.stars = [];
     this.blinkersLarge = [];
@@ -71,32 +145,7 @@ export class Graphic extends React.Component {
 
     window.stars = this.stars;
 
-    for (let i = 0; i < window.innerWidth / 1.5; i++) {
-      const star = PIXI.Sprite.from('./stars_particle.png');
-      star.scale.set(0.5 + Math.random());
-
-      // set the anchor point so the texture is centerd on the sprite
-      star.anchor.set(0.5);
-      star.rotation = Math.random();
-
-      // scatter them all
-      star.x = Math.random() * window.innerWidth;
-      star.y = Math.random() * window.innerHeight;
-
-      star.offset = Math.random() * 100;
-      star.alpha = Math.min(Math.random(), 0.75);
-
-      this.stars.push(star);
-
-      if (star.alpha >= 0.75) {
-        this.blinkersLarge.push(star);
-      }
-      if (i % 12 === 0 && star.alpha < 0.75) {
-        this.blinkersEtc.push(star);
-      }
-
-      graphic.addChild(star);
-    }
+    this.generateStars();
 
     updateGameObject({ background: graphic });
     updateGameObject({ blinkersLarge: this.blinkersLarge });
@@ -113,4 +162,14 @@ export function updateBackgroundFilter(value, filter) {
 }
 export function updateBackgroundPixelateFilter(value, filter) {
   filter.size = [value, value];
+}
+
+function randomizeStar(star, initial) {
+  star.z = initial ? Math.random() * 2000 : cameraZ + Math.random() * 1000 + 2000;
+
+  // Calculate star positions with radial random coordinate so no star hits the camera.
+  const deg = Math.random() * Math.PI * 2;
+  const distance = Math.random() * 50 + 1;
+  star.x = Math.cos(deg) * distance;
+  star.y = Math.sin(deg) * distance;
 }
