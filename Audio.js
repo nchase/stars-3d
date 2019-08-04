@@ -18,7 +18,7 @@ export async function setupAudio(audioType) {
 export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   var dataArray = new Uint8Array(analyserNode.frequencyBinCount);
 
-  var { blinkersLarge, blinkersEtc } = GameState.objects;
+  var { blinkersLarge, blinkersEtc, stars } = GameState.objects;
 
   analyserNode.getByteFrequencyData(dataArray);
 
@@ -36,15 +36,15 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
     blinkersLarge.forEach((blinker, index) => {
       const rand = Math.random();
       if (rand > 0.85 && rand <= 0.95) {
-        TweenLite.to(blinker, 0.2, { alpha: avg });
+        TweenLite.to(blinker.sprite, 0.2, { alpha: avg });
       } else if (rand >= 0.96) {
-        TweenLite.to(blinker, 0.2, { alpha: 1 });
+        TweenLite.to(blinker.sprite, 0.2, { alpha: 1 });
       }
     });
     blinkersEtc.forEach((blinker, index) => {
       const rand = Math.random();
       if (rand > 0.9) {
-        TweenLite.to(blinker, 0.2, { alpha: avg });
+        TweenLite.to(blinker.sprite, 0.2, { alpha: avg });
       }
     });
   }

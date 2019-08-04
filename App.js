@@ -75,7 +75,7 @@ export default class M extends React.Component {
           }}
         />
 
-        <audio ref="audioEl" src={this.props.audio} controls />
+        <audio ref="audioEl" className={'dn'} src={this.props.audio} controls />
 
         <Graphic className="pointer" onClick={this.handleClick} />
       </>

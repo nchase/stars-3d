@@ -8,10 +8,10 @@ import { updateGameObject } from './Game';
 let cameraZ = 0;
 const fov = 20;
 const baseSpeed = 0.025;
-let speed = 10;
+let speed = 40;
 let warpSpeed = 0;
 const starStretch = 5;
-const starBaseSize = 10;
+const starBaseSize = 4;
 
 export class Graphic extends React.Component {
   constructor(props) {
@@ -52,7 +52,6 @@ export class Graphic extends React.Component {
 
     window.Events.on('paused', audioEl => {
       console.log('paused');
-      //this.background.alpha = 0.6;
     });
   }
 
@@ -146,6 +145,7 @@ export class Graphic extends React.Component {
     updateGameObject({ background: graphic });
     updateGameObject({ blinkersLarge: this.blinkersLarge });
     updateGameObject({ blinkersEtc: this.blinkersEtc });
+    updateGameObject({ stars: this.stars });
 
     return graphic;
   }
