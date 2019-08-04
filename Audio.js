@@ -32,7 +32,7 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
     //logger(avg);
   }
 
-  if (document.querySelector('audio').paused === false) {
+  if (document.querySelector('audio').paused === false && avg > 0) {
     blinkersLarge.forEach((blinker, index) => {
       const rand = Math.random();
       if (rand > 0.85 && rand <= 0.95) {
