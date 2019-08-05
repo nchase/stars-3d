@@ -48,8 +48,8 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
     const currentTime = document.querySelector('audio').currentTime;
 
     const factor = currentTime % secondsPerMeasure;
-    if (factor > 0.5 && factor < 1 && onBeat === false) {
-      console.log('time to go!!', factor, currentTime);
+    if (factor > 0.5 && factor < 1 && onBeat === false && avg > 0.35) {
+      console.log(avg, 'time to go!!', factor, currentTime);
       onBeat = true;
       TweenLite.to(env, 0.2, { speed: avg * 20 });
 

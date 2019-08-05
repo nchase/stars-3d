@@ -56,7 +56,6 @@ export default class M extends React.Component {
 
     const el = document.querySelector('audio');
     el.paused ? this.setupAndPlay(el) : el.pause();
-    await window.fetch('/foo' + +new Date());
   };
 
   render() {
