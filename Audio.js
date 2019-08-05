@@ -6,15 +6,6 @@ import { logger } from './util';
 import { createAudioContextContainer } from './AudioContextContainer';
 import { GameState } from './Game';
 
-export async function setupAudio(audioType) {
-  const audioContextContainer = await createAudioContextContainer({ audioType });
-
-  // we should only do these if the right objects exist:
-  handleAudioBackgroundGraphicsUpdate(audioContextContainer.analyserNode);
-
-  return audioContextContainer;
-}
-
 let onBeat = false;
 
 export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
