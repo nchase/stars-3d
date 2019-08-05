@@ -15,6 +15,8 @@ export async function setupAudio(audioType) {
   return audioContextContainer;
 }
 
+let onBeat = false;
+
 export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   var dataArray = new Uint8Array(analyserNode.frequencyBinCount);
 
@@ -70,7 +72,17 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
       }
     });
 
-    //const divisibleNum = Math.floor(document.querySelector('audio').currentTime);
+    const divisibleNum = document.querySelector('audio').currentTime;
+    const factor = (divisibleNum + 0.5) % 3.5;
+    if (factor > 1.0 && factor < 1.5 && onBeat === false) {
+      console.log('time to go!!', factor, divisibleNum);
+      onBeat = true;
+      TweenLite.to(env, 0.2, { speed: avg * 20 });
+      setTimeout(() => {
+        TweenLite.to(env, 0.01, { speed: 0.05 });
+        onBeat = false;
+      }, 200);
+    }
   }
 
   // this function updates the background shader according to the audio
