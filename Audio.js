@@ -2,9 +2,6 @@ import average from 'analyser-frequency-average';
 import { AudioContext } from 'standardized-audio-context';
 import { TweenLite } from 'gsap';
 
-import { logger } from './util';
-
-import { createAudioContextContainer } from './AudioContextContainer';
 import { GameState } from './Game';
 
 let beatLocked = false;

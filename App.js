@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Graphic } from './Graphic';
+import Graphic from './Graphic';
 import { setupAudioContext } from './Audio';
 import { updateGameObject } from './Game';
 

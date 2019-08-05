@@ -14,7 +14,7 @@ let warpSpeed = 0;
 const starStretch = 5;
 const starBaseSize = 4;
 
-export class Graphic extends React.Component {
+export default class Graphic extends React.Component {
   constructor(props) {
     super(props);
   }
