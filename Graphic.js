@@ -29,7 +29,7 @@ export default class Graphic extends React.Component {
 
     this.refs.graphic && this.refs.graphic.appendChild(this.app.renderer.view);
 
-    this.graphic = this.createObjectsContainer();
+    this.graphic = this.createGraphicsObjects();
     this.app.stage.addChild(this.graphic);
 
     updateGameObject({ env: { speed: 0.05 } });
@@ -117,7 +117,7 @@ export default class Graphic extends React.Component {
     }
   };
 
-  createObjectsContainer() {
+  createGraphicsObjects() {
     var graphic = (this.graphic = new PIXI.Container({}));
 
     this.stars = [];
