@@ -1,4 +1,5 @@
 import average from 'analyser-frequency-average';
+import { AudioContext } from 'standardized-audio-context';
 import { TweenLite } from 'gsap';
 
 import { logger } from './util';
@@ -6,7 +7,40 @@ import { logger } from './util';
 import { createAudioContextContainer } from './AudioContextContainer';
 import { GameState } from './Game';
 
-let onBeat = false;
+let beatLocked = false;
+
+export function setupAudioContext() {
+  const audioContext = new AudioContext();
+
+  const analyserNode = audioContext.createAnalyser();
+  analyserNode.fftSize = Math.pow(2, 11);
+
+  audioContext.analyserNode = analyserNode;
+
+  for (const source of document.querySelectorAll('audio')) {
+    // why does creating media element source make this go to hell
+    // create a source of type audioNode for each found `<audio>` element[^1][^2]:
+    const audioNode = audioContext.createMediaElementSource(source);
+
+    source.addEventListener('seeking', () => window.Events.emit('seeking', source));
+    source.addEventListener('playing', () => {
+      window.Events.emit('playing', source);
+    });
+    source.addEventListener('pause', () => {
+      window.Events.emit('paused', source);
+    });
+
+    // connect each audioNode to the context's output:
+    audioNode.connect(audioContext.destination);
+
+    //  and also send each audioNode's data to our analyser:
+    audioNode.connect(analyserNode);
+  }
+
+  handleAudioBackgroundGraphicsUpdate(audioContext.analyserNode);
+
+  return audioContext;
+}
 
 export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
   var dataArray = new Uint8Array(analyserNode.frequencyBinCount);
@@ -48,9 +82,9 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
     const currentTime = document.querySelector('audio').currentTime;
 
     const factor = currentTime % secondsPerMeasure;
-    if (factor > 0.5 && factor < 1 && onBeat === false && avg > 0.33) {
+    if (factor > 0.5 && factor < 1 && beatLocked === false && avg > 0.33) {
       console.log(avg, 'time to go!!', factor, currentTime);
-      onBeat = true;
+      beatLocked = true;
       TweenLite.to(env, 0.2, { speed: avg * 20 });
 
       setTimeout(() => {
@@ -58,7 +92,7 @@ export function handleAudioBackgroundGraphicsUpdate(analyserNode) {
       }, 600);
 
       setTimeout(() => {
-        onBeat = false;
+        beatLocked = false;
       }, 1200);
     }
   }

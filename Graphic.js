@@ -36,26 +36,10 @@ export class Graphic extends React.Component {
 
     this.stage.addChild(this.background);
 
-    this.bindAudioEvents();
-
     updateGameObject({ env: { speed: 0.05 } });
 
     // put it on spin cycle and assign to something local in case we ever need to use it:
     this.app.ticker.add(this.animate);
-  }
-
-  bindAudioEvents() {
-    window.Events.on('playing', audioEl => {
-      console.log('playing');
-    });
-
-    window.Events.on('seeking', audioEl => {
-      console.log('seeking');
-    });
-
-    window.Events.on('paused', audioEl => {
-      console.log('paused');
-    });
   }
 
   // main animation loop; this function, which renders the scene via Pixi,
