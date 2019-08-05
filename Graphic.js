@@ -43,8 +43,8 @@ export class Graphic extends React.Component {
   }
 
   // main animation loop; this function, which renders the scene via Pixi,
-  // calls itself whenever `requestAnimationFrame` happens.
-
+  // gets called on every count of Pixi's `ticker`.
+  // The `ticker` is really a requestAnimationFrame under the hood:
   animate = delta => {
     this.renderer.render(this.stage);
 
