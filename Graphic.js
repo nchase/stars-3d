@@ -24,17 +24,13 @@ export default class Graphic extends React.Component {
       resizeTo: window,
     });
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-    this.renderer = this.app.renderer;
 
-    this.renderer.backgroundColor = '0x1c2733';
+    this.app.renderer.backgroundColor = '0x1c2733';
 
-    this.refs.graphic && this.refs.graphic.appendChild(this.renderer.view);
+    this.refs.graphic && this.refs.graphic.appendChild(this.app.renderer.view);
 
-    this.stage = this.app.stage;
-
-    this.background = this.createBackground();
-
-    this.stage.addChild(this.background);
+    this.graphic = this.createObjectsContainer();
+    this.app.stage.addChild(this.graphic);
 
     updateGameObject({ env: { speed: 0.05 } });
 
@@ -46,7 +42,7 @@ export default class Graphic extends React.Component {
   // gets called on every count of Pixi's `ticker`.
   // The `ticker` is really a requestAnimationFrame under the hood:
   animate = delta => {
-    this.renderer.render(this.stage);
+    this.app.renderer.render(this.app.stage);
 
     var { env } = GameState.objects;
 
@@ -121,7 +117,7 @@ export default class Graphic extends React.Component {
     }
   };
 
-  createBackground() {
+  createObjectsContainer() {
     var graphic = (this.graphic = new PIXI.Container({}));
 
     this.stars = [];
