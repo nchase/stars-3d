@@ -46,6 +46,7 @@
     "eslint-plugin-react": "^7.12.4",
     "livereactload": "^3.4.0",
     "prettier": "^1.16.4",
+    "typescript": "^3.5.3",
     "uglifyify": "^5.0.1",
     "watchify": "^3.11.1"
   }
