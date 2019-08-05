@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify index.js -t browserify-css -t babelify -g uglifyify > build.js",
-    "watch": "watchify index.js -t browserify-css -t babelify -p [ livereactload ] -o build.js",
+    "watch": "watchify index.js -t browserify-css -t babelify -p [ livereactload ] -o build-hot.js",
     "start": "echo \"\n\n\n\n\n\n\n\nAre you sure you meant to start the server in production mode?\" && npm run build && node server",
-    "start:dev": "npm run start:hot",
+    "start:dev": "DEV=true npm run start:hot",
     "start:hot": "concurrently \"node server.js\" \"npm run watch\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "publish": "./publish"

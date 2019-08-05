@@ -6,7 +6,11 @@
   </head>
   <body>
     <div id="app"></div>
-    <script src="./build.js"></script>
+    <% if (process.env && process.env.DEV) { %>
+      <script src="./build-hot.js"></script>
+    <% } else { %>
+      <script src="./build.js"></script>
+    <% } %>
   </body>
 </html>
 
