@@ -1,6 +1,4 @@
-git checkout gh-pages;
-
-git merge --no-ff --no-edit master;
+git checkout master;
 
 npm run build;
 
