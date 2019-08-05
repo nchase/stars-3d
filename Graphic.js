@@ -72,7 +72,7 @@ export class Graphic extends React.Component {
     for (let i = 0; i < this.stars.length; i++) {
       const star = this.stars[i];
       if (star.z < cameraZ) {
-        randomizeStar(star);
+        placeStar(star);
       }
 
       // Map star 3d position to 2d with really simple projection
@@ -116,7 +116,7 @@ export class Graphic extends React.Component {
       star.sprite.anchor.x = 0.5;
       star.sprite.anchor.y = 0.7;
 
-      randomizeStar(star, true);
+      placeStar(star, { initial: true });
 
       star.sprite.scale.set(0.5 + Math.random());
 
@@ -166,12 +166,20 @@ export function updateBackgroundPixelateFilter(value, filter) {
   filter.size = [value, value];
 }
 
-function randomizeStar(star, initial) {
-  star.z = initial ? Math.random() * 2000 : cameraZ + Math.random() * 1000 + 2000;
+function placeStar(star, { initial = false } = {}) {
+  star.z = Math.random() * 2000;
 
-  // Calculate star positions with radial random coordinate so no star hits the camera.
+  if (!initial) {
+    star.z = cameraZ + Math.random() * 1000 + 2000;
+  }
+
+  // random radial coordinates keep the stars away from the center of the camera:
   const deg = Math.random() * Math.PI * 2;
+
+  // random distance spreads the stars out over the space:
   const distance = Math.random() * 50 + 1;
+
+  // set the star's X and Y to the degree and distance:
   star.x = Math.cos(deg) * distance;
   star.y = Math.sin(deg) * distance;
 }
